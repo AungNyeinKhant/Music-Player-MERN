@@ -1,21 +1,32 @@
 import { FC, useState, useEffect } from "react";
 import Dashboard from "../../layouts/Dashboard";
-import { getArtistPlayAnalytics,  } from "../../services/analyticService";
+import { getArtistPlayAnalytics } from "../../services/analyticService";
 import LineChart from "../admin/analytic/LineChart";
 
 const Home: FC = () => {
-  const [activeTab, setActiveTab] = useState<"plays" | "revenue" | "tracks">("plays");
+  const [activeTab, setActiveTab] = useState<"plays" | "revenue" | "tracks">(
+    "plays"
+  );
   const [selectedPeriod, setSelectedPeriod] = useState<string>("monthly");
   const [startDate, setStartDate] = useState<Date | null>(new Date());
-  const [playsData, setPlaysData] = useState<{ labels: string[]; data: number[] }>({
+  const [playsData, setPlaysData] = useState<{
+    labels: string[];
+    data: number[];
+  }>({
     labels: [],
     data: [],
   });
-  const [revenueData, setRevenueData] = useState<{ labels: string[]; data: number[] }>({
+  const [revenueData, setRevenueData] = useState<{
+    labels: string[];
+    data: number[];
+  }>({
     labels: [],
     data: [],
   });
-  const [tracksData, setTracksData] = useState<{ labels: string[]; data: number[] }>({
+  const [tracksData, setTracksData] = useState<{
+    labels: string[];
+    data: number[];
+  }>({
     labels: [],
     data: [],
   });
@@ -25,20 +36,21 @@ const Home: FC = () => {
   useEffect(() => {
     const fetchAnalytics = async () => {
       if (!startDate) return;
-      
+
       setLoading(true);
       setError(null);
-      
+
       try {
-        const dateString = startDate.toISOString().split('T')[0];
-        
-        
-          const response:any = await getArtistPlayAnalytics(dateString, selectedPeriod);
-          setPlaysData({
-            labels: response.data.data.labels || [],
-            data: response.data.data.data || [],
-          });
-        
+        const dateString = startDate.toISOString().split("T")[0];
+
+        const response: any = await getArtistPlayAnalytics(
+          dateString,
+          selectedPeriod
+        );
+        setPlaysData({
+          labels: response.data.data.labels || [],
+          data: response.data.data.data || [],
+        });
       } catch (err) {
         console.error("Error fetching analytics:", err);
         setError("Failed to fetch analytics data");
@@ -66,16 +78,27 @@ const Home: FC = () => {
       <div className='space-y-6'>
         {/* Stats Cards */}
         <div className='grid grid-cols-1 md:grid-cols-3 gap-4'>
-          <div 
-            className={`bg-dashboard-secondary p-6 rounded-lg shadow-md text-dashboard-secondaryText hover:bg-dashboard-secondaryDark transition-colors ${activeTab === 'plays' ? 'ring-2 ring-dashboard-secondary' : ''}`}
-            onClick={() => setActiveTab('plays')}
+          <div
+            className={`bg-dashboard-secondary p-6 rounded-lg shadow-md text-dashboard-secondaryText hover:bg-dashboard-secondaryDark transition-colors ${
+              activeTab === "plays" ? "ring-2 ring-dashboard-secondary" : ""
+            }`}
+            onClick={() => setActiveTab("plays")}
           >
             <h3 className='text-lg font-semibold mb-2'>Total Plays</h3>
             <p className='text-3xl font-bold'>
-              {loading && activeTab === 'plays' ? "Loading..." : playsData.data.reduce((sum, val) => sum + val, 0).toLocaleString()}
+              {loading && activeTab === "plays"
+                ? "Loading..."
+                : playsData.data
+                    .reduce((sum, val) => sum + val, 0)
+                    .toLocaleString()}
             </p>
             <p className='text-sm mt-2'>
-              This Month: {loading && activeTab === 'plays' ? "Loading..." : playsData.data.reduce((sum, val) => sum + val, 0).toLocaleString()}
+              This Month:{" "}
+              {loading && activeTab === "plays"
+                ? "Loading..."
+                : playsData.data
+                    .reduce((sum, val) => sum + val, 0)
+                    .toLocaleString()}
               {/*loading && activeTab === 'plays' ? "..." : (getCurrentMonthTotal() || 0).toLocaleString()*/}
             </p>
           </div>
@@ -83,8 +106,7 @@ const Home: FC = () => {
 
         {/* Chart Section */}
         <div className='bg-dashboard-primary p-4 rounded-lg shadow-md'>
-          <div className='flex justify-between items-center mb-4 relative'>
-            
+          <div className='flex justify-between items-center mb-10 relative'>
             <div className='absolute right-0 top-0 flex items-center gap-4 z-10'>
               <select
                 value={selectedPeriod}
@@ -93,7 +115,6 @@ const Home: FC = () => {
               >
                 <option value='monthly'>Monthly</option>
                 <option value='yearly'>Yearly</option>
-                
               </select>
 
               <div className='flex items-center gap-2'>
@@ -112,7 +133,7 @@ const Home: FC = () => {
           </div>
 
           {/* Chart Content */}
-          <div className='h-[400px]'>
+          <div className='h-[400px] mt-2'>
             {error ? (
               <div className='text-red-500 text-center py-8'>{error}</div>
             ) : loading ? (
