@@ -1,0 +1,40 @@
+# Dependencies
+node_modules
+npm-debug.log
+
+# TypeScript build output
+dist
+
+# Environment variables
+.env
+.env.*
+
+# Development files
+.git
+.gitignore
+README.md
+*.md
+.vscode
+.idea
+
+# Logs
+logs
+*.log
+
+# Test files
+__tests__
+*.test.ts
+*.spec.ts
+
+# Uploads directory (should be handled separately)
+uploads
+
+# TypeScript source maps
+*.map
+
+# Docker files
+Dockerfile
+.dockerignore
+
+#aws
+MSP-API.pem
